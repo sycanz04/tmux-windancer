@@ -12,5 +12,5 @@ Hit `Prefix + I` to fetch the plugin and source it. You should now be able to us
 - `Prefix + P` - Move window left
 - `Prefix + N` - Move window right
 - `Prefix + Alt + w` - Specify window to swap with
-<br/>
+
 **Note**: The window rotates to the other end if it's at the left/rightmost corner
