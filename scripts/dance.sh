@@ -17,12 +17,24 @@ RIGHT_INDEX=$((CURRENT_INDEX + 1))
 MAX_INDEX=$(tmux list-windows -t "$SESSION" -F '#I' | sort -n | tail -1)
 MIN_INDEX=$(tmux list-windows -t "$SESSION" -F '#I' | sort -n | head -1)
 
+# Function to move current index to left/right
+moveLeft() {
+    tmux swap-window -s "$SESSION:$CURRENT_INDEX" -t "$SESSION:$LEFT_INDEX"
+    tmux select-window -t "$SESSION:$LEFT_INDEX"
+}
+
+moveRight() {
+    tmux swap-window -s "$SESSION:$CURRENT_INDEX" -t "$SESSION:$RIGHT_INDEX"
+    tmux select-window -t "$SESSION:$RIGHT_INDEX"
+}
+
 # Function to rotate if current index is left/rightmost
 rotateLeft() {
     for (( i=CURRENT_INDEX ; i<$MAX_INDEX ; i++ ));
     do
         tmux swap-window -s "$SESSION:$i" -t "$SESSION:$((i+1))"
     done
+    tmux select-window -t "$SESSION:$MAX_INDEX"
 }
 
 rotateRight() {
@@ -30,25 +42,31 @@ rotateRight() {
     do
         tmux swap-window -s "$SESSION:$i" -t "$SESSION:$((i-1))"
     done
+    tmux select-window -t "$SESSION:$MIN_INDEX"
+}
+
+# Function to select specified window
+selectWindow() {
+    tmux swap-window -s "$SESSION:$CURRENT_INDEX" -t "$SESSION:$TARGET"
+    tmux select-window -t "$SESSION:$TARGET"
 }
 
 # Main function
 main() {
     if [[ $TARGET == "left" ]]; then
         if [[ $LEFT_INDEX -ge 0 ]]; then
-            tmux swap-window -s "$SESSION:$CURRENT_INDEX" -t "$SESSION:$LEFT_INDEX"
+            moveLeft
         else
             rotateLeft
         fi
     elif [[ $TARGET == "right" ]]; then
         if [[ $RIGHT_INDEX -le $MAX_INDEX ]]; then
-            tmux swap-window -s "$SESSION:$CURRENT_INDEX" -t "$SESSION:$RIGHT_INDEX"
+            moveRight
         else
             rotateRight
         fi
     elif [[ $TARGET -ge $MIN_INDEX ]] && [[ $TARGET -le $MAX_INDEX ]]; then
-        tmux swap-window -s "$SESSION:$CURRENT_INDEX" -t "$SESSION:$TARGET"
-
+        selectWindow
     elif [[ $TARGET -lt $MIN_INDEX ]] || [[ $TARGET -gt $MAX_INDEX ]]; then
         tmux display "The index does not exist!"
     else
