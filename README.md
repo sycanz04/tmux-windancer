@@ -1,5 +1,5 @@
 # Tmux Windancer 🔄
-This is a Tmux plugin that lets you rearrange your windows. I made this as an excuse to practice shell scripting lol.
+This is a Tmux plugin that lets you rearrange your windows. I made this as an excuse to practice shell scripting.
 ![tmux-windancer](https://github.com/user-attachments/assets/dffb7212-103b-4958-8212-990965a9f2c6)
 
 ## Installation with [TPM](https://github.com/tmux-plugins/tpm) ⚙️
